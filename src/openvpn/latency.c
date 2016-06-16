@@ -65,19 +65,17 @@ float get_latency_host(struct connection_entry * host, int * mem, int index)
   struct timeval timestamp_return;
   struct timeval tv;
 	
-  char port_char[10];
-  sprintf(port_char,"%d",host->remote_port);
-  port = strtoul(port_char, &dummy, 10);
-  if(port < 1 || port > 65535 || *dummy != '\0')
+  
+  /*if(port < 1 || port > 65535 || *dummy != '\0')
   {
     fprintf(stderr, "Invalid port number: %d\n", host->remote_port);
-  }
+  }*/
 
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = PF_UNSPEC;
   hints.ai_socktype = SOCK_DGRAM;
 
-  error = getaddrinfo(host->remote,port_char,&hints,&res0);
+  error = getaddrinfo(host->remote,host->remote_port,&hints,&res0);
   if(error)
   {
     perror(gai_strerror(error));
@@ -139,12 +137,18 @@ float get_latency_host(struct connection_entry * host, int * mem, int index)
 
 void rank_host_by_latency(struct connection_list * l)
 {
+  printf("Entrée dans rank_host_by_latency\n");	
+
   int size = l->len;
+   printf("Création size passée : size %d\n",size);
   int tab_sorted[size];
+   printf("Création tab_sorted passée\n");
   int tab_unsorted[size];
+   printf("Création tab_unsorted passée\n");
   struct connection_list * temp;
   int i,x,y;
 
+  printf("Création tableau passée\n");
   pid_t pids[size];
   int n = size;
 
@@ -160,6 +164,8 @@ void rank_host_by_latency(struct connection_list * l)
 
   // calculating the array size based on the number of terms being passed from child to parent
   msize = (n)*sizeof(int); 
+  
+  printf("msize passé \n");
 
   // open the memory
   shm_fd = shm_open(name, O_CREAT | O_RDWR | O_TRUNC, S_IRWXU | S_IRWXG);
@@ -169,6 +175,7 @@ void rank_host_by_latency(struct connection_list * l)
     printf("Error in shm_open(): %s\n",strerror(errno));
   }
 
+  printf("shm_open passé \n");
   // attach the shared memory segment
   ftruncate(shm_fd, msize);
 
@@ -178,6 +185,8 @@ void rank_host_by_latency(struct connection_list * l)
   {
 	fprintf(stderr,"Error in mmap()");
   }
+  
+  printf("Mémoire partagee OK\n");
 
   for (i = 0; i < n; ++i) 
   {
@@ -188,6 +197,7 @@ void rank_host_by_latency(struct connection_list * l)
     } 
 	else if (pids[i] == 0) 
 	{
+	  printf("port : %s \n",l->array[i]->remote_port);
 	  get_latency_host(l->array[i], shared_memory, i); 
 	  exit(0);
     }
