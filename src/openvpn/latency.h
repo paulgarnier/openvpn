@@ -5,7 +5,7 @@
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2010 OpenVPN Technologies, Inc. <sales@openvpn.net>
+ *  Copyright (C) 2016 Paul Garnier <paul.garnier3@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -26,7 +26,6 @@
 
 
 #include "options.h"
-//#include <sys/mman.h> //Didn't want to modify syshead.h
 
 extern const uint8_t send_data[];
 
