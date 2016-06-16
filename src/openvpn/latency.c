@@ -5,6 +5,7 @@
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
+ *  Copyright (C) 2016 Paul Garnier <paul.garnier3@gmail.com>
  *  
  *
  *  This program is free software; you can redistribute it and/or modify
