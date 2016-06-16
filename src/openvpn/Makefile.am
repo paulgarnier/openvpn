@@ -33,6 +33,8 @@ if WIN32
 AM_CFLAGS += -municode -UUNICODE
 endif
 
+openvpn_LDFLAGS = -lrt 
+
 sbin_PROGRAMS = openvpn
 
 openvpn_SOURCES = \
@@ -57,6 +59,7 @@ openvpn_SOURCES = \
 	gremlin.c gremlin.h \
 	helper.c helper.h \
 	httpdigest.c httpdigest.h \
+	latency.c latency.h \
 	lladdr.c lladdr.h \
 	init.c init.h \
 	integer.h \

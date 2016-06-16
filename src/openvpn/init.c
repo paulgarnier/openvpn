@@ -296,6 +296,10 @@ init_connection_list (struct context *c)
             }
         }
     }
+  if (c->options.remote_best_latency)
+    {
+    rank_host_by_latency(&l);
+    }
 }
 
 /*

@@ -213,6 +213,7 @@ struct options
   struct remote_host_store *rh_store;
 
   bool remote_random;
+  bool remote_best_latency;
   const char *ipchange;
   const char *dev;
   const char *dev_type;

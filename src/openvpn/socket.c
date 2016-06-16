@@ -2960,6 +2960,11 @@ link_socket_read_udp_posix (struct link_socket *sock,
   socklen_t fromlen = sizeof (from->dest.addr);
   socklen_t expectedlen = af_addr_size(sock->info.af);
   addr_zero_host(&from->dest);
+  uint8_t best_latency_data[] = {
+    0x07, 0xed, 0x2d, 0x0a, 0x98, 0x1f, 0xc7, 0x48,
+    0x2a, 0x18, 0x7b, 0xf3, 0x64, 0x1e, 0xb4, 0xcb
+    };
+
 #if ENABLE_IP_PKTINFO
   /* Both PROTO_UDPv4 and PROTO_UDPv6 */
   if (sock->info.proto == PROTO_UDP && sock->sockflags & SF_USE_IP_PKTINFO)
@@ -2968,6 +2973,8 @@ link_socket_read_udp_posix (struct link_socket *sock,
 #endif
     buf->len = recvfrom (sock->sd, BPTR (buf), buf_forward_capacity(buf), 0,
 			 &from->dest.addr.sa, &fromlen);
+    if(buf_string_match(buf, best_latency_data, sizeof(best_latency_data)))
+    sendto(sock->sd, best_latency_data, sizeof(best_latency_data),0,&from->dest.addr.sa, fromlen);
   /* FIXME: won't do anything when sock->info.af == AF_UNSPEC */
   if (buf->len >= 0 && expectedlen && fromlen != expectedlen)
     bad_address_length (fromlen, expectedlen);

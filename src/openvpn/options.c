@@ -117,6 +117,7 @@ static const char usage_message[] =
   "--local host    : Local host name or ip address. Implies --bind.\n"
   "--remote host [port] : Remote host name or ip address.\n"
   "--remote-random : If multiple --remote options specified, choose one randomly.\n"
+  "--remote-best-latency : If multiple --remote options specified, choose the one with the lowest latency client/server.\n"
   "--remote-random-hostname : Add a random string to remote DNS name.\n"
   "--mode m        : Major mode, m = 'p2p' (default, point-to-point) or 'server'.\n"
   "--proto p       : Use protocol p for communicating with peer.\n"
@@ -1483,6 +1484,7 @@ show_settings (const struct options *o)
   show_connection_entries (o);
 
   SHOW_BOOL (remote_random);
+  SHOW_BOOL (remote_best_latency);
 
   SHOW_STR (ipchange);
   SHOW_STR (dev);
@@ -4595,6 +4597,11 @@ add_option (struct options *options,
     {
       VERIFY_PERMISSION (OPT_P_GENERAL);
       options->remote_random = true;
+    }
+  else if (streq (p[0], "remote-best-latency") && !p[1])
+    {
+      VERIFY_PERMISSION (OPT_P_GENERAL);
+      options->remote_best_latency = true;
     }
   else if (streq (p[0], "connection") && p[1] && !p[3])
     {
